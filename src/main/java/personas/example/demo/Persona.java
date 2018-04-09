@@ -1,5 +1,10 @@
 package personas.example.demo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Persona {
 
     private Integer id;
@@ -46,6 +51,19 @@ public class Persona {
 
     public void setNacionalidad(String nacionalidad) {
         this.nacionalidad = nacionalidad;
+    }
+
+    public Persona findPersonaById (List<Persona> listPersona, Integer id) {
+        Persona persona = new Persona();
+        for (int i = 0; i < listPersona.size(); i++) {
+          Persona p = (new Persona());
+          p = listPersona.get(i);
+          if (p.getId() == id) {
+              return p;
+          }
+        }
+        return null;
+
     }
 
 }
