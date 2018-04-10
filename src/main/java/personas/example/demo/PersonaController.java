@@ -50,10 +50,23 @@ public class PersonaController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity actualizarPeronsa (@RequestBody Persona persona){
-
-        return new ResponseEntity<Persona>(persona, HttpStatus.OK);
+        Persona p = (new Persona()).findPersonaById(PersonaList,persona.getId());
+        p.setNombre(persona.getNombre());
+        p.setApellido(persona.getApellido());
+        p.setDireccion(persona.getDireccion());
+        p.setNacionalidad(persona.getNacionalidad());
+        this.mapPersonas.put(p.getId(),p);
+        return new ResponseEntity<Persona>(p, HttpStatus.OK);
     }
-
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity borrarPersona (@RequestBody Persona persona){
+        Integer retorno = (new Persona()).borrar(PersonaList,persona.getId());
+        if (retorno == 1){
+            PersonaList.remove(persona);
+            this.mapPersonas.remove(persona.getId(),persona);
+        }
+        return new ResponseEntity<List<Persona>>(PersonaList, HttpStatus.OK);
+    }
 }
 
 

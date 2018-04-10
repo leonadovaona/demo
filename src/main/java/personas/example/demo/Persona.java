@@ -63,7 +63,18 @@ public class Persona {
           }
         }
         return null;
-
+    }
+    public Integer borrar (List<Persona> listPersona, Integer id) {
+        Persona persona = new Persona();
+        for (int i = 0; i < listPersona.size(); i++) {
+            Persona p = (new Persona());
+            p = listPersona.get(i);
+            if (p.getId() == id) {
+                listPersona.remove(p);
+                return 1;
+            }
+        }
+        return 0;
     }
 
 }
