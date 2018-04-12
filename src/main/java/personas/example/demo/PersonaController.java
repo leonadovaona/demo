@@ -1,6 +1,5 @@
 package personas.example.demo;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,62 +9,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
-import personas.example.demo.Persona;
-
 @RestController
-@RequestMapping("/personas")
+@RequestMapping("/persons")
 public class PersonaController {
-    private Map<Integer,Persona> mapPersonas = new HashMap<Integer,Persona>();
-    private List<Persona>PersonaList = new ArrayList<Persona>();
+    private Map<Integer,Person> mapPersons = new HashMap<Integer,Person>();
+    private List<Person>PersonList = new ArrayList<Person>();
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity persona() {
-        PersonaList  =  new ArrayList<Persona>(mapPersonas.values());
-        return new ResponseEntity<List<Persona>>(PersonaList, HttpStatus.OK);
+    public ResponseEntity person() {
+        PersonList  =  new ArrayList<Person>(mapPersons.values());
+        return new ResponseEntity<List<Person>>(PersonList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity getPersona(@PathVariable Integer id){
-        Persona persona = (new Persona()).findPersonaById(PersonaList,id);
-        return new ResponseEntity<Persona>(persona, HttpStatus.OK);
+        Person person = PersonaService.findPersonById(PersonList,id);
+        return new ResponseEntity<Person>(person, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Persona> agregarPersona(@RequestBody Persona persona) {
-        Persona nuevaPersona = new Persona();
-        nuevaPersona.setId(persona.getId());
-        nuevaPersona.setNombre(persona.getNombre());
-        nuevaPersona.setApellido(persona.getApellido());
-        nuevaPersona.setDireccion(persona.getDireccion());
-        nuevaPersona.setNacionalidad(persona.getNacionalidad());
-        this.mapPersonas.put(nuevaPersona.getId(),nuevaPersona);
-        return new ResponseEntity<Persona>(nuevaPersona, HttpStatus.OK);
+    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+        Person nuevaPerson = new Person();
+        nuevaPerson.setId(person.getId());
+        nuevaPerson.setName(person.getName());
+        nuevaPerson.setLastname(person.getLastname());
+        nuevaPerson.setAddress(person.getAddress());
+        nuevaPerson.setNacionality(person.getNacionality());
+        this.mapPersons.put(nuevaPerson.getId(), nuevaPerson);
+        PersonList = new ArrayList<Person>(mapPersons.values());
+        return new ResponseEntity<Person>(nuevaPerson, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity actualizarPeronsa (@RequestBody Persona persona){
-        Persona p = (new Persona()).findPersonaById(PersonaList,persona.getId());
-        p.setNombre(persona.getNombre());
-        p.setApellido(persona.getApellido());
-        p.setDireccion(persona.getDireccion());
-        p.setNacionalidad(persona.getNacionalidad());
-        this.mapPersonas.put(p.getId(),p);
-        return new ResponseEntity<Persona>(p, HttpStatus.OK);
+    public ResponseEntity updatePerson (@RequestBody Person person){
+        Person p = PersonaService.findPersonById(PersonList, person.getId());
+        p.setName(person.getName());
+        p.setLastname(person.getLastname());
+        p.setAddress(person.getAddress());
+        p.setNacionality(person.getNacionality());
+        this.mapPersons.put(p.getId(),p);
+        return new ResponseEntity<Person>(p, HttpStatus.OK);
     }
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity borrarPersona (@RequestBody Persona persona){
-        Integer retorno = (new Persona()).borrar(PersonaList,persona.getId());
-        if (retorno == 1){
-            PersonaList.remove(persona);
-            this.mapPersonas.remove(persona.getId(),persona);
-        }
-        return new ResponseEntity<List<Persona>>(PersonaList, HttpStatus.OK);
+    public ResponseEntity deletePerson (@RequestBody Person person){
+         PersonaService.delete(PersonList, person.getId());
+         this.mapPersons.remove(person.getId(), person);
+         PersonList = new ArrayList<Person>(mapPersons.values());
+        return new ResponseEntity<List<Person>>(PersonList, HttpStatus.OK);
     }
 }
 
