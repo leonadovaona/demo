@@ -1,15 +1,26 @@
 package personas.example.demo;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
 public class PersonaService {
 
-    public static Person findPersonById (List<Person> listPerson, Integer id) {
-        return (Person) listPerson.stream().filter(p -> p.getId() == id);
+        public static Person findPersonById (List<Person> listPerson, Long id) {
+            return listPerson.stream()
+                    .filter(x -> x.getId()== id)
+                    .findAny()
+                    .orElse(null);
+
     }
 
-    public static void delete (List<Person> listPerson, Integer id) {
-        listPerson.remove(findPersonById(listPerson,id));
+    public static Person delete (Map<Long,Person> mapsPerson, Person person) {
+        mapsPerson.remove(person.getId(),person);
+        return person;
     }
 
 }

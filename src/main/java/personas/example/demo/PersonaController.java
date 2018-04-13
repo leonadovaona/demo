@@ -16,17 +16,16 @@ import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/persons")
 public class PersonaController {
-    private Map<Integer,Person> mapPersons = new HashMap<Integer,Person>();
+    private Map<Long,Person> mapPersons = new HashMap<Long,Person>();
     private List<Person>PersonList = new ArrayList<Person>();
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity person() {
-        PersonList  =  new ArrayList<Person>(mapPersons.values());
-        return new ResponseEntity<List<Person>>(PersonList, HttpStatus.OK);
+        return new ResponseEntity<Map<Long,Person>>(mapPersons, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity getPersona(@PathVariable Integer id){
+    public ResponseEntity getPersona(@PathVariable Long id){
         Person person = PersonaService.findPersonById(PersonList,id);
         return new ResponseEntity<Person>(person, HttpStatus.OK);
     }
@@ -56,10 +55,9 @@ public class PersonaController {
     }
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deletePerson (@RequestBody Person person){
-         PersonaService.delete(PersonList, person.getId());
-         this.mapPersons.remove(person.getId(), person);
-         PersonList = new ArrayList<Person>(mapPersons.values());
-        return new ResponseEntity<List<Person>>(PersonList, HttpStatus.OK);
+        person = PersonaService.delete(mapPersons, person);
+        this.mapPersons.remove(person.getId(), person);
+        return new ResponseEntity<Map<Long,Person>>(mapPersons, HttpStatus.OK);
     }
 }
 
