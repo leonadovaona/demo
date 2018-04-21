@@ -1,5 +1,9 @@
 package personas.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Person {
 
     private Long id;
@@ -27,7 +31,6 @@ public class Person {
     public String getLastname() {
         return lastname;
     }
-
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
@@ -47,5 +50,6 @@ public class Person {
     public void setNacionality(String nacionality) {
         this.nacionality = nacionality;
     }
+
 
 }

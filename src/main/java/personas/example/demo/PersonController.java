@@ -1,19 +1,25 @@
 package personas.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-
-import java.util.*;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.*;
+
+
+
 @RestController
 @RequestMapping("/persons")
+@ComponentScan (basePackages = "personas.example.demo")
+
 public class PersonController {
+    @Autowired
+    private PersonService personService;
     private Map<Long,Person> mapPersons = new HashMap<Long,Person>();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -24,7 +30,7 @@ public class PersonController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity getPersona(@PathVariable Long id){
         //Person person = PersonaService.findPersonById(PersonList,id);
-        return new ResponseEntity<Person>(PersonService.findPersonById(mapPersons.values(),id), HttpStatus.OK);
+        return new ResponseEntity<Person>(personService.findPersonById(mapPersons.values(),id), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -41,7 +47,7 @@ public class PersonController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updatePerson (@RequestBody Person person){
-        Person p = PersonService.findPersonById(mapPersons.values(), person.getId());
+        Person p = personService.findPersonById(mapPersons.values(), person.getId());
         p.setName(person.getName());
         p.setLastname(person.getLastname());
         p.setAddress(person.getAddress());
@@ -52,8 +58,8 @@ public class PersonController {
     }
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deletePerson (@RequestBody Person person){
-        person = PersonService.delete(mapPersons, person);
-        this.mapPersons.remove(person.getId(), person);
+        person = personService.delete(mapPersons, person);
+        this.mapPersons.remove(person.getId());
         return new ResponseEntity<Collection<Person>>(mapPersons.values(), HttpStatus.OK);
     }
 }
