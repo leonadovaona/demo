@@ -60,7 +60,7 @@ public class PersonController {
     public ResponseEntity deletePerson (@PathVariable Long id){
         Person person = personService.delete(mapPersons, personService.findPersonById(mapPersons.values(),id));
         this.mapPersons.remove(person.getId());
-        return new ResponseEntity<Collection<Person>>(mapPersons.values(), HttpStatus.OK);
+        return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
