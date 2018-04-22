@@ -1,19 +1,25 @@
 package personas.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-
-import java.util.*;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.*;
+
+
+
 @RestController
 @RequestMapping("/persons")
+@ComponentScan (basePackages = "personas.example.demo")
+
 public class PersonController {
+    @Autowired
+    private PersonService personService;
     private Map<Long,Person> mapPersons = new HashMap<Long,Person>();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -23,8 +29,8 @@ public class PersonController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity getPersona(@PathVariable Long id){
-        //Person person = PersonaService.findPersonById(PersonList,id);
-        return new ResponseEntity<Person>(PersonService.findPersonById(mapPersons.values(),id), HttpStatus.OK);
+
+        return new ResponseEntity<Person>(personService.findPersonById(mapPersons.values(),id), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -39,9 +45,9 @@ public class PersonController {
         return new ResponseEntity<Person>(newPerson, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updatePerson (@RequestBody Person person){
-        Person p = PersonService.findPersonById(mapPersons.values(), person.getId());
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity updatePerson (@PathVariable Long id, @RequestBody Person person){
+        Person p = personService.findPersonById(mapPersons.values(), id);
         p.setName(person.getName());
         p.setLastname(person.getLastname());
         p.setAddress(person.getAddress());
@@ -50,12 +56,18 @@ public class PersonController {
 
         return new ResponseEntity<Person>(p, HttpStatus.OK);
     }
-    @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deletePerson (@RequestBody Person person){
-        person = PersonService.delete(mapPersons, person);
-        this.mapPersons.remove(person.getId(), person);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deletePerson (@PathVariable Long id){
+        Person person = personService.delete(mapPersons, personService.findPersonById(mapPersons.values(),id));
+        this.mapPersons.remove(person.getId());
         return new ResponseEntity<Collection<Person>>(mapPersons.values(), HttpStatus.OK);
     }
-}
 
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity deleteAllPersons (){
+        personService.deleteAll(mapPersons);
+        mapPersons.clear();
+        return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
+    }
+}
 
