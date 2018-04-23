@@ -1,6 +1,8 @@
 package personas.example.demo;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
 
     private Long id;
     private String name;
