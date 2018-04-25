@@ -1,10 +1,9 @@
-package personas.example.demo;
+package personas.example.demo.Service;
 
 import org.springframework.stereotype.Service;
+import personas.example.demo.Core.Person;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
