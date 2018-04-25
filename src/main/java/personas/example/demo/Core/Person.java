@@ -1,4 +1,4 @@
-package personas.example.demo;
+package personas.example.demo.Core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
