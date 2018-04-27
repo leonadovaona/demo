@@ -22,8 +22,11 @@ public class Person {
     private Long id;
     @Column(name = "nombre")
     private String name;
+    @Column(name = "apellido")
     private String lastname;
+    @Column(name = "direccion")
     private String address;
+    @Column(name = "nacionalidad")
     private String nacionality;
 
     public Long getId() {
