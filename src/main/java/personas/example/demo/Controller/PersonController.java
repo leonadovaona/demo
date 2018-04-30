@@ -1,6 +1,6 @@
 package personas.example.demo.Controller;
 
-import personas.example.demo.Person;
+import personas.example.demo.Core.Person;
 import personas.example.demo.Service.PersonService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import personas.example.demo.repository.PersonRepository;
 
 
 import java.util.*;
@@ -24,11 +25,14 @@ import java.util.*;
 public class PersonController {
     @Autowired
     private PersonService personService;
+    private PersonRepository personRepository;
     private Map<Long,Person> mapPersons = new HashMap<Long,Person>();
+
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity person() {
-        return new ResponseEntity<Collection<Person>>(mapPersons.values(), HttpStatus.OK);
+
+        return new ResponseEntity<Collection<Person>>(personRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -45,6 +49,8 @@ public class PersonController {
         newPerson.setLastname(person.getLastname());
         newPerson.setAddress(person.getAddress());
         newPerson.setNacionality(person.getNacionality());
+        //
+        personRepository.save(newPerson);
         this.mapPersons.put(newPerson.getId(), newPerson);
         return new ResponseEntity<Person>(newPerson, HttpStatus.OK);
     }
