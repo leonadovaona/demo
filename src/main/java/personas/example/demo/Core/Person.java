@@ -12,10 +12,11 @@ import java.util.Date;
 
 @Component
 @Entity
-@Table(name = "notes")
+@Table(name = "persona")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"},
         allowGetters = true)
+
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
